@@ -8,9 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title','Admin')</title>
-
+    <link rel="icon" href="{{asset('images/favicon.png')}}" type="image/gif" />
     <!-- Custom fonts for this template-->
     <link href="{{asset('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
     <link
@@ -19,6 +20,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{{asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
 
 </head>
 
@@ -30,10 +32,7 @@
           <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{route('admin.dashboard')}}"> 
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
             <!-- Divider -->
@@ -46,10 +45,16 @@
             </li>
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{{route('admin.product')}}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
+                    <span>Product</span></a>
             </li>
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+               <a class="nav-link" href="{{route('admin.getorder')}}">
+                   <i class="fas fa-fw fa-table"></i>
+                   <span>All Orders</span></a>
+           </li>
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
             <!-- Sidebar Toggler (Sidebar) -->
@@ -117,24 +122,16 @@
                               <li class="nav-item dropdown no-arrow">
                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{Auth::user()->name}}</span>
                                         <img class="img-profile rounded-circle"
-                                             src="img/undraw_profile.svg">
+                                             src="{{asset('images/undraw_profile.svg')}}">
                                    </a>
                                    <!-- Dropdown - User Information -->
                                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                         aria-labelledby="userDropdown">
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{route('profile.edit')}}">
                                              <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                              Profile
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                             Settings
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                             <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                             Activity Log
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -208,6 +205,29 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
+    <!-- Toastr JS -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+     <script>
+     @if(Session::has('success'))
+          toastr.success("{{ Session::get('success') }}", "Success");
+     @endif
+
+     @if(Session::has('error'))
+          toastr.error("{{ Session::get('error') }}", "Error");
+     @endif
+
+     @if(Session::has('info'))
+          toastr.info("{{ Session::get('info') }}", "Info");
+     @endif
+
+     @if(Session::has('warning'))
+          toastr.warning("{{ Session::get('warning') }}", "Warning");
+     @endif
+     </script>
+
+     {!! Toastr::message() !!}
 
 </body>
 
